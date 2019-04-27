@@ -27,15 +27,16 @@ function draw(){
   
   obj_Deus.carregarBG();
   obj_Deus.contadorFrame();
+  
+  obj_Deus.contadorFrame();
+  obj_Deus.octopus.carregarBase();
+  obj_Deus.octopus.carregarTentaculos();
   if(obj_Deus.iniciado){
 
     obj_Deus.personagem.posicionarPersonagem();
     obj_Deus.verificarDerrota();
 
   }
-  obj_Deus.contadorFrame();
-  obj_Deus.octopus.carregarBase();
-  obj_Deus.octopus.carregarTentaculos();
   
 		
 }
@@ -94,7 +95,7 @@ class Deus {
     const inicio3 =  this.octopus.inicio3;
     const inicio4 =  this.octopus.inicio4;
 
-    if((posicao == 0 || posicao == 1) && inicio1 == 2){
+    if((posicao == 0 || posicao == 1) && inicio1 == 3){
       console.log('Perdeu um cara');
       this.resetarObjetos();
       return true;
