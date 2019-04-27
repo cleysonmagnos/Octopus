@@ -2,15 +2,17 @@
 function preload() {
   bg = loadImage('img/background.png');
   // bg_completo = loadImage('img/Bases/background.png');
+  
   sprite_perso = loadAnimation('img/perso/base/perso_1.png', 'img/perso/base/perso_8.png');
+  sprite_pego = loadAnimation('img/perso/pego/pego.png', 'img/perso/pego/pego_2.png');
   sprite_barco = loadAnimation('img/perso/barco/perso_barco_1.png', 'img/perso/barco/perso_barco_3.png');
   sprite_perso_tes = loadAnimation('img/perso/base/tesouro/tesouro_1.png', 'img/perso/base/tesouro/tesouro_3.png');
   base_polvo = loadImage('img/polvo/base/polvo_base.png');
   base_polvo_com = loadImage('img/polvo/completo/polvo_completo.png');
-  polvo_ten_1 = loadAnimation('img/polvo/tentaculo_1/tentaculo_1.png', 'img/polvo/tentaculo_1/tentaculo_3.png');
-  polvo_ten_2 = loadAnimation('img/polvo/tentaculo_2/tentaculo_1.png', 'img/polvo/tentaculo_2/tentaculo_3.png');
-  polvo_ten_3 = loadAnimation('img/polvo/tentaculo_3/tentaculo_1.png', 'img/polvo/tentaculo_3/tentaculo_4.png');
-  polvo_ten_4 = loadAnimation('img/polvo/tentaculo_4/tentaculo_1.png', 'img/polvo/tentaculo_4/tentaculo_3.png');
+  polvo_ten_1 = loadAnimation('img/polvo/tentaculoA/tentaculo_1.png', 'img/polvo/tentaculoA/tentaculo_3.png');
+  polvo_ten_2 = loadAnimation('img/polvo/tentaculoB/tentaculo_1.png', 'img/polvo/tentaculoB/tentaculo_4.png');
+  polvo_ten_3 = loadAnimation('img/polvo/tentaculoC/tentaculo_1.png', 'img/polvo/tentaculoC/tentaculo_4.png');
+  polvo_ten_4 = loadAnimation('img/polvo/tentaculoD/tentaculo_1.png', 'img/polvo/tentaculoD/tentaculo_3.png');
 
 }
 
@@ -24,28 +26,46 @@ function setup(){
 function draw(){
   
   obj_Deus.carregarBG();
-  obj_Deus.personagem.posicionarPersonagem();
-  // obj_Deus.personagem.carregarSprite(0, 120, 80);
+  obj_Deus.contadorFrame();
+  if(obj_Deus.iniciado){
+
+    obj_Deus.personagem.posicionarPersonagem();
+    obj_Deus.verificarDerrota();
+
+  }
+  obj_Deus.contadorFrame();
+  obj_Deus.octopus.carregarBase();
+  obj_Deus.octopus.carregarTentaculos();
+  
 		
 }
 
 function keyPressed() {
-  if(keyCode == LEFT_ARROW){
+  if(keyCode == LEFT_ARROW && obj_Deus.iniciado){
     obj_Deus.botaoPressionado(-obj_Deus.variacaoSpr);
-  }else if(keyCode == RIGHT_ARROW){
+  }else if(keyCode == RIGHT_ARROW && obj_Deus.iniciado){
     obj_Deus.botaoPressionado(obj_Deus.variacaoSpr);
+  }
+  if(keyCode == DOWN_ARROW){
+    obj_Deus.iniciado = true;
   }
   
 }
 
-
 class Deus {
 	constructor(frame){
+    this.iniciado = false;
     this.frames = frame;
+    this.frameAtual = 1;
     this.bg = bg;
     this.personagem = new Personagem();
+    this.octopus = new Octopus();
     this.pontuacao = 0;
     this.variacaoSpr = 2;
+  }
+
+  iniciar(){
+    this.iniciado = true;
   }
   
   carregarBG(){
@@ -54,6 +74,52 @@ class Deus {
 
   botaoPressionado(lado){
     this.personagem.posicionarPersonagem(lado);
+  }
+
+  contadorFrame(){
+    this.frameAtual++;
+    if(this.frameAtual > 11){
+      this.frameAtual = 1;
+      
+    }
+    if(this.frameAtual == this.frames/2 || this.frameAtual == this.frames){
+      this.octopus.Alternacao();
+    }
+  }
+
+  verificarDerrota(){
+    const posicao = this.personagem.posicaoAtual;
+    const inicio1 =  this.octopus.inicio1;
+    const inicio2 =  this.octopus.inicio2;
+    const inicio3 =  this.octopus.inicio3;
+    const inicio4 =  this.octopus.inicio4;
+
+    if((posicao == 0 || posicao == 1) && inicio1 == 2){
+      console.log('Perdeu um cara');
+      this.resetarObjetos();
+      return true;
+    }
+    if((posicao == 4 || posicao == 5) && inicio2 == 3){
+      console.log('Perdeu um cara');
+      this.resetarObjetos();
+      return true;
+    }
+    if((posicao == 6 || posicao == 7) && inicio3 == 3){
+      console.log('Perdeu um cara');
+      this.resetarObjetos();
+      return true;
+    }
+    if(posicao == 8 && inicio4 == 2){
+      console.log('Perdeu um cara');
+      this.resetarObjetos();
+      return true;
+    }
+  }
+  
+  resetarObjetos(){
+    this.iniciado = false;
+    this.personagem = new Personagem();
+    this.octopus = new Octopus();
   }
   
 
@@ -89,7 +155,6 @@ class Personagem {
   posicionarPersonagem(lado = 0){
     if(this.posicaoAtual > 7 && lado < 0){
       this.posicaoAtual = 7;
-      // console.log(this.posicaoAtual);
     }
     else if(this.posicaoAtual > 0 && lado < 0){
       this.posicaoAtual = this.posicaoAtual + lado;
@@ -100,14 +165,12 @@ class Personagem {
     if(this.posicaoAtual < 0){
       this.posicaoAtual = 0;
     }
-    
 
     if(this.posicaoAtual > 7){
       this.animacaoTesouro();
     }else{
       this.carregarSprite();
     }
-    
     
   }
 
@@ -117,7 +180,7 @@ class Personagem {
     if(this.animaTesouro.getFrame() == this.animaTesouro.getLastFrame()){
       let pontuacao = 3/obj_Deus.frames;
       obj_Deus.pontuacao = obj_Deus.pontuacao + pontuacao;
-      console.log(obj_Deus.pontuacao);
+      // console.log(obj_Deus.pontuacao);
       
     }
   }
@@ -125,6 +188,101 @@ class Personagem {
   //   // alert('asdasd');
   // }
   
+
+}
+
+class Octopus {
+	constructor(){
+    this.pego = sprite_pego;
+    this.base = base_polvo;
+    this.sprTentaculo1 = polvo_ten_1;
+    this.sprTentaculo2 = polvo_ten_2;
+    this.sprTentaculo3 = polvo_ten_3;
+    this.sprTentaculo4 = polvo_ten_4;
+    this.inicio1 = int(random(1, 4));
+    this.inicio2 = int(random(1, 5));
+    this.inicio3 = int(random(1, 5));
+    this.inicio4 = int(random(1, 4));
+    this.variacao1 = 1;
+    this.variacao2 = 1;
+    this.variacao3 = 1;
+    this.variacao4 = 1;
+    this.tentaculo1 = [
+                    createVector(82,52),
+                    createVector(67,53),
+                    createVector(48,47),
+                  ];
+    this.tentaculo2 = [
+                    createVector(110,64),
+                    createVector(109,78),
+                    createVector(100,87),
+                    createVector(101,106)
+                  ];
+    this.tentaculo3 = [
+                    createVector(143,83),
+                    createVector(143,91),
+                    createVector(145,99),
+                    createVector(149,109)
+                  ];
+    this.tentaculo4 = [
+                    createVector(177,90),
+                    createVector(177,100),
+                    createVector(179,111)
+                  ];
+  }
+  
+  carregarBase(){
+    image(this.base, 46, 34);
+  }
+
+  Alternacao(){
+    
+    if(this.inicio1 > 2 || (this.inicio1 < 1 && this.variacao1 < 0)){
+      this.variacao1 = -this.variacao1;
+    }
+    if(this.inicio2 > 3 || (this.inicio2 < 1 && this.variacao2 < 0)){
+      this.variacao2 = -this.variacao2;
+    }
+    if(this.inicio3 > 3 || (this.inicio3 < 1 && this.variacao3 < 0)){
+      this.variacao3 = -this.variacao3;
+    }
+    if(this.inicio4 > 2 || (this.inicio4 < 1 && this.variacao4 < 0)){
+      this.variacao4 = -this.variacao4;
+    }
+
+    this.inicio1 = this.inicio1 + this.variacao1;
+    this.inicio2 = this.inicio2 + this.variacao2;
+    this.inicio3 = this.inicio3 + this.variacao3;
+    this.inicio4 = this.inicio4 + this.variacao4;
+    // console.log(this.inicio1,this.inicio2,this.inicio3,this.inicio4);
+
+    
+  }
+
+  carregarTentaculos(){
+    for (let index = 0; index < this.inicio1; index++) {
+      const element = this.tentaculo1[index];
+      image(this.sprTentaculo1.getImageAt(index), element.x, element.y);
+      
+    }
+    for (let index = 0; index < this.inicio2; index++) {
+      const element = this.tentaculo2[index];
+      image(this.sprTentaculo2.getImageAt(index), element.x, element.y);
+
+    }
+    for (let index = 0; index < this.inicio3; index++) {
+      const element = this.tentaculo3[index];
+      image(this.sprTentaculo3.getImageAt(index), element.x, element.y);
+
+    }
+    for (let index = 0; index < this.inicio4; index++) {
+      const element = this.tentaculo4[index];
+      image(this.sprTentaculo4.getImageAt(index), element.x, element.y);
+
+    }
+
+  }
+
 
 }
 
