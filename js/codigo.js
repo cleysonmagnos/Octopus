@@ -185,7 +185,7 @@ class Deus {
       // console.log(this.vidas);
     }else{
       
-      alert("Game Over: Sua pontuação total foi de: " + this.pontuacao + " pontos");
+      alert("Game Over!! Sua pontuação total foi de: " + this.pontuacao + " pontos");
       // console.log(this.pontuacao);
       this.resetarObjetos();
       location.reload();
