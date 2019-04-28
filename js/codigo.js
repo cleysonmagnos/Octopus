@@ -21,7 +21,7 @@ function setup(){
 	createCanvas(240,160);
   frameRate(12);
   obj_Deus = new Deus(12);
-  
+  alert("Pressione Seta Esquerda e Direita para jogar ");
 }
 
 function draw(){
@@ -165,10 +165,12 @@ class Deus {
       this.retirarVida();
       return true;
     }
-    if(posicao == 8 && inicio4 == 3){
+    if(posicao > 7 && inicio4 == 3){
       this.retirarVida();
       return true;
     }
+
+    // console.log(posicao, inicio4);
   }
 
   retirarVida(){
