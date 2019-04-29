@@ -161,7 +161,7 @@ class Deus {
       this.retirarVida();
       return true;
     }
-    if((posicao == 6 || posicao == 7) && inicio3 == 3){
+    if((posicao == 6 || posicao == 7) && inicio3 == 4){
       this.retirarVida();
       return true;
     }
