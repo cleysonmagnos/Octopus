@@ -113,7 +113,7 @@ class Deus {
   contadorFrame(){
     this.frameAtual++;
     // console.log(this.frameContador);
-    if(this.iniciado && (this.frameAtual == this.frames || this.frameAtual == this.frames/2)){
+    if(this.iniciado && (this.frameAtual == this.frames)){
       this.octopus.Alternacao();
     }
     if(this.iniciado && (this.frameAtual == this.frames) && this.personagem.posicaoAtual > 7){
@@ -312,17 +312,22 @@ class Octopus {
   }
 
   Alternacao(){
+    this.variacao1 = int(random([-1, 1]));
+    this.variacao2 = int(random([-1, 1]));
+    this.variacao3 = int(random([-1, 1]));
+    this.variacao4 = int(random([-1, 1]));
+    // console.log(this.variacao1, this.variacao2, this.variacao3, this.variacao4);
     
-    if(this.inicio1 > 2 || (this.inicio1 < 1 && this.variacao1 < 0)){
+    if((this.inicio1 > 2 && this.variacao1 > 0) || (this.inicio1 < 1 && this.variacao1 < 0)){
       this.variacao1 = -this.variacao1;
     }
-    if(this.inicio2 > 3 || (this.inicio2 < 1 && this.variacao2 < 0)){
+    if((this.inicio2 > 3 && this.variacao2 > 0) || (this.inicio2 < 1 && this.variacao2 < 0)){
       this.variacao2 = -this.variacao2;
     }
-    if(this.inicio3 > 3 || (this.inicio3 < 1 && this.variacao3 < 0)){
+    if((this.inicio3 > 3 && this.variacao3 > 0) || (this.inicio3 < 1 && this.variacao3 < 0)){
       this.variacao3 = -this.variacao3;
     }
-    if(this.inicio4 > 2 || (this.inicio4 < 1 && this.variacao4 < 0)){
+    if((this.inicio4 > 2 && this.variacao4 > 0) || (this.inicio4 < 1 && this.variacao4 < 0)){
       this.variacao4 = -this.variacao4;
     }
 
