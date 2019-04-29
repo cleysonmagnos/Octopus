@@ -129,7 +129,7 @@ class Deus {
 
   retornarBarquinho(){
     this.pontuacao = this.pontuacao + this.pontuacaoTemp;
-    this.pontuacaoTemp = 0;
+    
     this.resetarObjetos();
   }
 
@@ -195,6 +195,7 @@ class Deus {
   
   resetarObjetos(){
     this.iniciado = false;
+    this.pontuacaoTemp = 0;
     this.personagem = new Personagem();
     this.octopus = new Octopus();
   }
